@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Force DNS resolution using Google's DNS server
-RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+# Removed the forced DNS resolution line:
+# RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
 # Copy Composer from the official Composer image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
