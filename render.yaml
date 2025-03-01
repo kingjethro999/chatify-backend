@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: connectify-api
+    env: php
+    buildCommand: composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan key:generate && php artisan storage:link
+    startCommand: php artisan serve
+    envVars:
+      - key: APP_NAME
+        value: Connectify
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        fromDatabase:
+          name: APP_URL
+          property: value
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: DB_HOST
+          property: value
+      - key: DB_PORT
+        fromDatabase:
+          name: DB_PORT
+          property: value
+      - key: DB_DATABASE
+        fromDatabase:
+          name: DB_DATABASE
+          property: value
+      - key: DB_USERNAME
+        fromDatabase:
+          name: DB_USERNAME
+          property: value
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: DB_PASSWORD
+          property: value
+      - key: FILESYSTEM_DISK
+        value: public
+    disk:
+      name: connectify-storage
+      mountPath: /storage/app/public
+      sizeGB: 10
