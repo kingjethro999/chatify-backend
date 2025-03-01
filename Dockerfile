@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.2-apache
 
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
@@ -22,14 +22,8 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# Debug: List files to ensure composer.json is present
-RUN ls -al
-
 # Verify Composer is working (optional)
 RUN composer --version
-
-# (Optional) Clear Composer cache
-RUN composer clear-cache
 
 # Install PHP dependencies in verbose mode to get detailed output
 RUN composer install --optimize-autoloader --no-dev -vvv
