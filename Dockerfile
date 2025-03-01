@@ -10,9 +10,6 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Removed the forced DNS resolution line:
-# RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
-
 # Copy Composer from the official Composer image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -25,11 +22,17 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+# Debug: List files to ensure composer.json is present
+RUN ls -al
+
 # Verify Composer is working (optional)
 RUN composer --version
 
-# Install PHP dependencies
-RUN composer install --optimize-autoloader --no-dev
+# (Optional) Clear Composer cache
+RUN composer clear-cache
+
+# Install PHP dependencies in verbose mode to get detailed output
+RUN composer install --optimize-autoloader --no-dev -vvv
 
 # Set appropriate permissions (if needed)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
