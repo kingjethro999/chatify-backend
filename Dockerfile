@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Update Apache DocumentRoot to Laravel's public folder
+RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf
+
 # Copy Composer from the official Composer image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -25,8 +28,8 @@ COPY . .
 # Verify Composer is working (optional)
 RUN composer --version
 
-# Install PHP dependencies in verbose mode to get detailed output
-RUN composer install --optimize-autoloader --no-dev -vvv
+# Install PHP dependencies
+RUN composer install --optimize-autoloader --no-dev
 
 # Set appropriate permissions (if needed)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
